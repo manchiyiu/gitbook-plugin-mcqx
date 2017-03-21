@@ -120,6 +120,7 @@ require(["gitbook", "jquery"], function(gitbook, $) {
                   } else {
                   //if incorrect, display custom message (or default if one is not specified)
                   $mcqBox.find('.MCQmessage').text((question.incorrect) ? question.incorrect : "Wrong answer, try again.").show('slow').delay(1000).hide('slow');
+                  }
                 }
             });
 
