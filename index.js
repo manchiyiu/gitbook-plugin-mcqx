@@ -22,11 +22,12 @@ module.exports = {
 
     blocks: {
         mcq: {
-            blocks: ['title', 'o1', 'o2', 'o3', 'o4', 'o5', 'o6', 'o7', 'o8', 'hint', 'message'],
+            blocks: ['title', 'o1', 'o2', 'o3', 'o4', 'o5', 'o6', 'o7', 'o8', 'hint', 'message', 'incorrect'],
             process: function(blk) {
 
                 var question = {
                     ans: blk.kwargs.ans.trim(),
+                    maxattempts: blk.kwargs.maxattempts ? blk.kwargs.maxattempts : false,
                     random: blk.kwargs.random || false,
                     target: blk.kwargs.target ? blk.kwargs.target.trim() : false,
                     option: []

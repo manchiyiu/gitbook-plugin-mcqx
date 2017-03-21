@@ -7,10 +7,14 @@ require(["gitbook", "jquery"], function(gitbook, $) {
         this.title = input.title;
         this.option = input.option;
 
+        this.attempts = 0;
+
         if (input.hint) this.hint = input.hint;
         if (input.count) this.count = input.count;
         if (input.random) this.random = input.random;
         if (input.message) this.message = input.message;
+        if (input.incorrect) this.incorrect = input.incorrect;
+        if (input.maxattempts) this.maxattempts = input.maxattempts;
     }
 
     MultipleChoice.prototype.checkAns = function(input) {
@@ -65,6 +69,16 @@ require(["gitbook", "jquery"], function(gitbook, $) {
                     $mcqBox.find('.MCQdescription').text(question.message).show(speed);
             };
 
+            //incorrect answer handling when max attempts are specified.
+            var incorrectAnswer = function(animation) {
+                $mcqBox.find('.submitMCQ, .hintMCQ').attr('disabled', true);
+                $mcqBox.find('input[name=' + question.qid + '_group]').attr('disabled', true);
+
+                var speed = animation ? 'slow' : null;
+
+                $mcqBox.find('.MCQmessage').text((question.incorrect) ? question.incorrect : "Wrong answer.").show(speed);
+            };
+
             // prepare options  ---------------------------
             var optionsToShow = [];
             if (question.random || question.count < question.option.length) {
@@ -98,7 +112,14 @@ require(["gitbook", "jquery"], function(gitbook, $) {
                     }); //planting a cookie
                     correctAnswer(true);
                 } else {
-                    $mcqBox.find('.MCQmessage').text("Wrong answer, try again.").show('slow').delay(1000).hide('slow');
+                  //if incorrect, increase question attempts counter.
+                  question.attempts++;
+                  //if max attempts reached, mark answer as incorrect.
+                  if(question.attempts >= question.maxattempts){
+                    incorrectAnswer(true);
+                  } else {
+                  //if incorrect, display custom message (or default if one is not specified)
+                  $mcqBox.find('.MCQmessage').text((question.incorrect) ? question.incorrect : "Wrong answer, try again.").show('slow').delay(1000).hide('slow');
                 }
             });
 
